@@ -1,8 +1,11 @@
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./../pages/Homepage";
+
 const Main = () => {
     return (
-        <main className="main-content">
-            <h1>Main content</h1>
-        </main>
+        <Routes> 
+            <Route path="/" element={<HomePage />}></Route>
+        </Routes>
     );
 };
 
