@@ -15,7 +15,7 @@ const BookingPage = ({ availableTimes, submitForm, dispatch }) => {
             <img
                 className="banner-image"
                 src={restaurant}
-                alt="Piatto preparato dal ristorante Little Lemon"
+                alt="Our restaurant Little Lemon with tables and chairs set up for dining"
             />
         </div>
         <BookingForm availableTimes={availableTimes} submitForm={submitForm} dispatch={dispatch} />

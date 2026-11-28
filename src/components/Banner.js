@@ -14,7 +14,7 @@ const Banner = () => {
             <img
                 className="banner-image"
                 src={restaurantFood}
-                alt="Piatto preparato dal ristorante Little Lemon"
+                alt="Our bruschetta appetizer with fresh tomatoes, basil, and garlic on toasted bread"
             />
         </div>
     );
