@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const BookingForm = ({ availableTimes, submitForm, dispatch }) => {
 
@@ -6,6 +6,7 @@ const BookingForm = ({ availableTimes, submitForm, dispatch }) => {
     const [bTime, setBTime] = useState("");
     const [guests, setGuests] = useState("");
     const [occasion, setOccasion] = useState("");
+    const [disableSubmit, setDisableSubmit] = useState(true);
 
     function onChangeDate(newDate) {
         setBDate(newDate);
@@ -17,6 +18,7 @@ const BookingForm = ({ availableTimes, submitForm, dispatch }) => {
         setBTime("");
         setGuests("");
         setOccasion("");
+        setDisableSubmit(true);
     }; 
 
     const handleSubmit = (e) => { 
@@ -26,34 +28,61 @@ const BookingForm = ({ availableTimes, submitForm, dispatch }) => {
         clearForm(); 
     }; 
 
+    useEffect(() => {
+        if (bDate && bTime && guests && occasion) {
+            setDisableSubmit(false);
+        } else {
+            setDisableSubmit(true);
+        }
+    }, [bDate, bTime, guests, occasion]);
+
     return (
         <form className="booking-form" onSubmit={handleSubmit}>
+            {disableSubmit && (
+                <div className="booking-validation-status" role="status">
+                    <p>To make the reservation, fill all the missing form fields:</p>
+                    <ul>
+                        {!bDate && <li>Date</li>}
+                        {!bTime && <li>Time</li>}
+                        {!guests && <li>Number of guests</li>}
+                        {!occasion && <li>Occasion</li>}
+                    </ul>
+                </div>
+            )}
             <fieldset>
                 <div className="field">
-                    <label htmlFor="res-date">Choose date</label>
-                    <input type="date" id="res-date" name="res-date" value={bDate} onChange={(e) => onChangeDate(e.target.value)} required aria-label="Choose date" />
+                    <label htmlFor="date">Choose date</label>
+                    <input type="date" id="date" name="date" value={bDate} onChange={(e) => onChangeDate(e.target.value)} required aria-label="Choose date" />
+                    {!bDate && <span id="date-error" className="field-error">This field is required</span>}
                 </div>
                 <div className="field">
-                    <label htmlFor="res-time">Choose time</label>
-                    <select id="res-time" name="res-time" value={bTime} onChange={(e) => setBTime(e.target.value)} required aria-label="Choose time">
+                    <label htmlFor="time">Choose time</label>
+                    <select id="time" name="time" value={bTime} onChange={(e) => setBTime(e.target.value)} required aria-label="Choose time">
+                        <option value="" disabled>Select a time</option>
                         {availableTimes.availableTimes.map((time) => (
                             <option key={time} value={time}>{time}</option>
                         ))}
                     </select>
+                    {!bTime && <span id="time-error" className="field-error">This field is required</span>}
                 </div>
                 <div className="field">
                     <label htmlFor="guests">Number of guests</label>
                     <input type="number" id="guests" name="guests" value={guests} onChange={(e) => setGuests(e.target.value)} min="1" max="10" required aria-label="Number of guests" />
+                    {!guests && <span id="guests-error" className="field-error">This field is required</span>}
                 </div>
                 <div className="field">
                     <label htmlFor="occasion">Occasion</label>
                     <select id="occasion" name="occasion" value={occasion} onChange={(e) => setOccasion(e.target.value)} required aria-label="Occasion">
-                        <option value="">Other occasion</option>
+                        <option value="" disabled>Select an occasion</option>
+                        <option value="Other occasion">Other occasion</option>
                         <option value="birthday">Birthday</option>
                         <option value="anniversary">Anniversary</option>
                     </select>
+                    {!occasion && <span id="occasion-error" className="field-error">This field is required</span>}
                 </div>
-                <button type="submit">Make Your reservation</button>
+                <button type="submit" disabled={disableSubmit}>
+                    Make Your reservation
+                </button>
             </fieldset>
         </form>
     );
